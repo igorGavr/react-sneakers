@@ -1,7 +1,14 @@
-import {Card} from "./components/Card";
+import {Card} from "./components/Card/Card";
 import {Header} from "./components/Header";
 import {Drawer} from "./components/Drawer";
 
+const sneakers = [
+    {name: "Мужские Кроссовки Nike Blazer Mid Suede", price: 12999, imageUrl: "/img/sneakers/1.jpg"},
+    {name: "Мужские Кроссовки Nike Air Max 270", price: 12959, imageUrl: "/img/sneakers/2.jpg"},
+    {name: "Мужские Кроссовки Nike Blazer Mid Suede", price: 1599, imageUrl: "/img/sneakers/3.jpg"},
+    {name: "Кроссовки Puma X Aka Boku Future Rider", price: 1539, imageUrl: "/img/sneakers/4.jpg"},
+    {name: "Мужские Кроссовки Under Armour Curry 8", price: 1259, imageUrl: "/img/sneakers/3.jpg"},
+]
 
 function App() {
   return (
@@ -17,14 +24,10 @@ function App() {
                 </div>
             </div>
             <div className="d-flex flex-wrap">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
+                {
+                    sneakers.map((obj, i) =>
+                        <Card name={obj.name} price={obj.price} imageUrl={obj.imageUrl} key={i}/>)
+                }
             </div>
         </div>
     </div>
