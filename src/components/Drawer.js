@@ -1,14 +1,15 @@
 import React from 'react';
 
 const Drawer = ({ onCloseCart, items=[] }) => {
+
     return (
         <div className="overlay">
             <div className="drawer">
                 <h2 className="d-flex justify-between mb-40">Корзина
                     <img onClick={onCloseCart} className="removeBtn cu-p" src="/img/btn-remove.svg" alt="remove"/></h2>
                 <div className="items">
-                    {items.map((obj) => (
-                        <div className="cartItem d-flex align-center mb-20">
+                    {items.map((obj, i) => (
+                        <div key={i} className="cartItem d-flex align-center mb-20">
                             <img
                                 className="mr-20"
                                 width={70} height={70}
@@ -17,7 +18,7 @@ const Drawer = ({ onCloseCart, items=[] }) => {
                                 <p className="mb-5">{obj.name}</p>
                                 <b>{obj.price} руб.</b>
                             </div>
-                            <img className="removeBtn" src="/img/btn-remove.svg" alt="remove"/>
+                            <img  className="removeBtn" src="/img/btn-remove.svg" alt="remove"/>
                         </div>
                     ))}
                 </div>

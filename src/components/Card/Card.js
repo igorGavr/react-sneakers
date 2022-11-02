@@ -6,7 +6,7 @@ const Card = ({ name, imageUrl, price, onPlus }) => {
     const [isChecked, setIsChecked] = useState(false);
 
     const onClickPlus = () => {
-        onPlus({ name, imageUrl, price});
+        onPlus({ name, imageUrl, price });
         setIsChecked(!isChecked);
     }
     return (

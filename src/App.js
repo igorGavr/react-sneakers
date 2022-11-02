@@ -2,6 +2,7 @@ import {Card} from "./components/Card/Card";
 import {Header} from "./components/Header";
 import {Drawer} from "./components/Drawer";
 import {useEffect, useState} from "react";
+import axios from "axios";
 
 // const sneakers = [
 //     {name: "Мужские Кроссовки Nike Blazer Mid Suede", price: 12999, imageUrl: "/img/sneakers/1.jpg"},
@@ -13,19 +14,22 @@ import {useEffect, useState} from "react";
 
 function App() {
     const [items, setItems] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [cartOpened, setCartOpened] = useState(false);
 
     useEffect(() => {
-        fetch('https://6356a1759243cf412f89c342.mockapi.io/pizzas')
-                    .then(value => value.json())
-                    .then(value => setItems(value));
+        axios.get('https://6356a1759243cf412f89c342.mockapi.io/pizzas')
+            .then(res => setItems(res.data));
     }, []);
 
     const onAddToCart = (obj) => {
         setCartItems([...cartItems, obj]);
     }
-    console.log(cartItems)
+    const onChangeSearchInput = (event) => {
+      setSearchValue(event.target.value);
+        console.log(event.target.value)
+    }
 
   return (
     <div className="wrapper clear">
@@ -37,21 +41,22 @@ function App() {
         <Header onClickCart={() => setCartOpened(true)}/>
         <div className="content p-40">
             <div className="d-flex justify-between align-center mb-40">
-                <h1>Все кроссовки</h1>
-                <div className="search-block">
+                {searchValue ? <h1>{`Поиск по: ${searchValue}`}</h1> : <h1>Все кроссовки</h1>}
+                <div className="search-block d-flex">
                     <img src="/img/search.svg" alt="search"/>
-                    <input placeholder="Поиск..."/>
+                    {searchValue && <img onClick={() => setSearchValue('')}
+                        className="clear" src="/img/btn-remove.svg" alt="clear"/>}
+                    <input onChange={onChangeSearchInput}  value={searchValue} placeholder="Поиск..."/>
                 </div>
             </div>
             <div className="d-flex flex-wrap">
-                {
-                    items.map((obj, i) =>
+                {items
+                    .filter((item) => item.name.toLowerCase().includes(searchValue))
+                    .map((obj, i) =>
                         <Card
                             name={obj.name} price={obj.price}
                             imageUrl={obj.imageUrl} key={i}
-                            onPlus={(obj) => onAddToCart(obj)}
-                        />)
-                }
+                            onPlus={(obj) => onAddToCart(obj)}/>)}
             </div>
         </div>
     </div>
