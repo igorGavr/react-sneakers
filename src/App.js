@@ -39,13 +39,17 @@ function App() {
         setCartItems((prev) => prev.filter(item => item.id !== id));
         console.log(id)
     }
-    const onAddToFavorite = (obj) => {
-        if (favorites.find((favObj) => favObj.id === obj.id)){
-            axios.delete(`https://6356a1759243cf412f89c342.mockapi.io/favorites/${obj.id}`);
-            setFavorites((prev) => prev.filter(item => item.id !== obj.id));
-        }else {
-            axios.post('https://6356a1759243cf412f89c342.mockapi.io/favorites', obj);
-            setFavorites((prev) => [...prev, obj]);
+    const onAddToFavorite = async (obj) => {
+        try {
+            if (favorites.find((favObj) => favObj.id === obj.id)){
+                axios.delete(`https://6356a1759243cf412f89c342.mockapi.io/favorites/${obj.id}`);
+                // setFavorites((prev) => prev.filter(item => item.id !== obj.id));
+            }else {
+                const { data } = await axios.post('https://6356a1759243cf412f89c342.mockapi.io/favorites', obj);
+                setFavorites((prev) => [...prev, data]);
+            }
+        }catch (e) {
+            console.error(e);
         }
     }
     const onChangeSearchInput = (event) => {

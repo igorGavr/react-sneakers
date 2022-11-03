@@ -21,8 +21,7 @@ const Home = ({ items, searchValue, onAddToCart,
                         .filter((item) => item.name.toLowerCase().includes(searchValue))
                         .map((obj, i) =>
                             <Card
-                                name={obj.name} price={obj.price}
-                                imageUrl={obj.imageUrl} key={i}
+                                {...obj} key={i}
                                 onPlus={(obj) => onAddToCart(obj)}
                                 onFavorite={(obj) => onAddToFavorite(obj)}
                             />)}
