@@ -24,30 +24,36 @@ function App() {
     const [cartOpened, setCartOpened] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const BASE_URL = "https://6356a1759243cf412f89c342.mockapi.io";
     useEffect(() => {
         async function fetchData() {
-            const cartRes = await axios.get('https://6356a1759243cf412f89c342.mockapi.io/cart');
-            const favoritesRes = await axios.get('https://6356a1759243cf412f89c342.mockapi.io/favorites');
-            const itemsRes = await axios.get('https://6356a1759243cf412f89c342.mockapi.io/pizzas');
+            const cartRes = await axios.get(`${BASE_URL}/cart`);
+            const favoritesRes = await axios.get(`${BASE_URL}/favorites`);
+            const itemsRes = await axios.get(`${BASE_URL}/sneakers`);
             setIsLoading(false);
             setCartItems(cartRes.data);
             setFavorites(favoritesRes.data);
             setItems(itemsRes.data);
         }
-        fetchData();
+        fetchData().then();
     }, []);
 
     const onAddToCart = (obj) => {
-        if (cartItems.find((item) => Number(item.id) === Number(obj.id))){
-            axios.delete(`https://6356a1759243cf412f89c342.mockapi.io/cart/${obj.id}`);
-            setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)))
-        }else {
-            axios.post('https://6356a1759243cf412f89c342.mockapi.io/cart', obj);
-            setCartItems((prev) => [...prev, obj]);
+        try {
+            if (cartItems.find((item) => Number(item.id) === Number(obj.id))){
+                axios.delete(`${BASE_URL}/cart/${obj.id}`);
+                setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)))
+            }else {
+                axios.post(`${BASE_URL}/cart`, obj);
+                setCartItems((prev) => [...prev, obj]);
+                console.log(obj.id)
+            }
+        }catch (e) {
+            console.error(e);
         }
     }
     const onRemoveItem = (id) => {
-        axios.delete(`https://6356a1759243cf412f89c342.mockapi.io/cart/${id}`);
+        axios.delete(`${BASE_URL}/cart/${id}`);
         setCartItems((prev) => prev.filter(item => item.id !== id));
         console.log(id)
     }
@@ -55,38 +61,26 @@ function App() {
     const onAddToFavorite = async (obj) => {
         try {
             if (favorites.find((favObj) => favObj.id === obj.id)){
-                axios.delete(`https://6356a1759243cf412f89c342.mockapi.io/favorites/${obj.id}`);
+                axios.delete(`${BASE_URL}/favorites/${obj.id}`);
                 // setFavorites((prev) => prev.filter(item => item.id !== obj.id));
             }else {
-                const { data } = await axios.post('https://6356a1759243cf412f89c342.mockapi.io/favorites', obj);
+                const { data } = await axios.post(`${BASE_URL}/favorites`, obj);
                 setFavorites((prev) => [...prev, data]);
             }
         }catch (e) {
             console.error(e);
         }
     }
-
-    const onChangeSearchInput = (event) => {
-        setSearchValue(event.target.value);
-        console.log(event.target.value)
-    }
-
     return (
-        <AppContext.Provider value={{ items, cartItems, favorites }}>
+        <AppContext.Provider value={{ items, cartItems, favorites, searchValue, setSearchValue,
+                                     setCartOpened }}>
             <div className="wrapper clear">
-                {cartOpened ?
-                    <Drawer items={cartItems}
-                            onCloseCart={() => setCartOpened(false)}
-                            onRemove={onRemoveItem}
-                    /> : null
-                }
-                <Header onClickCart={() => setCartOpened(true)}/>
+                {cartOpened ? <Drawer onRemove={onRemoveItem}/> : null}
+
+                <Header/>
                 <Routes>
                     <Route path="/" exact element={
                         <Home
-                            items={items} searchValue={searchValue}
-                            setSearchValue={setSearchValue}
-                            onChangeSearchInput={onChangeSearchInput}
                             onAddToFavorite={onAddToFavorite}
                             cartItems={cartItems}
                             isLoading={isLoading}

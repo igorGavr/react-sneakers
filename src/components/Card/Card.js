@@ -2,19 +2,20 @@ import React, {useState} from 'react';
 import ContentLoader from "react-content-loader"
 import styles from './Card.module.scss';
 
-const Card = ({ id, name, imageUrl, price,
-                  onPlus, onFavorite, favorited=false,
-                  added=false, loading=false }) => {
+const Card = ({ id, name, imageUrl, price, onPlus, onFavorite, favorited = false,
+                  added = false, loading = false
+              }) => {
     const [isChecked, setIsChecked] = useState(added);
     const [isFavorite, setIsFavorite] = useState(favorited);
 
     const onClickPlus = () => {
-        onPlus({ id, name, imageUrl, price });
+        onPlus({id, name, imageUrl, price});
         setIsChecked(!isChecked);
+        console.log(id)
     }
     const onClickFavorite = () => {
         setIsFavorite(!isFavorite);
-        onFavorite({ id, name, imageUrl, price });
+        onFavorite({id, name, imageUrl, price});
     }
     return (
         <div className={styles.card}>
@@ -27,12 +28,12 @@ const Card = ({ id, name, imageUrl, price,
                     backgroundColor="#f3f3f3"
                     foregroundColor="#ecebeb"
                 >
-                    <rect x="0" y="0" rx="10" ry="10" width="167" height="161" />
-                    <rect x="0" y="177" rx="5" ry="5" width="167" height="17" />
-                    <rect x="0" y="211" rx="10" ry="10" width="72" height="34" />
-                    <rect x="208" y="268" rx="0" ry="0" width="2" height="1" />
-                    <rect x="191" y="367" rx="0" ry="0" width="9" height="0" />
-                    <rect x="108" y="211" rx="0" ry="0" width="59" height="24" />
+                    <rect x="0" y="0" rx="10" ry="10" width="167" height="161"/>
+                    <rect x="0" y="177" rx="5" ry="5" width="167" height="17"/>
+                    <rect x="0" y="211" rx="10" ry="10" width="72" height="34"/>
+                    <rect x="208" y="268" rx="0" ry="0" width="2" height="1"/>
+                    <rect x="191" y="367" rx="0" ry="0" width="9" height="0"/>
+                    <rect x="108" y="211" rx="0" ry="0" width="59" height="24"/>
                 </ContentLoader> :
                 <>
                     <div onClick={onClickFavorite} className={styles.favorite}>
@@ -44,6 +45,7 @@ const Card = ({ id, name, imageUrl, price,
                         <div className="d-flex flex-column">
                             <span>Цена:</span>
                             <b>{price} руб.</b>
+                            <b>{id}</b>
                         </div>
                         <img onClick={onClickPlus}
                              src={isChecked ? "/img/checked.svg" : "/img/plus.svg"}

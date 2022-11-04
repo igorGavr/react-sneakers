@@ -1,20 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Card} from "../components/Card/Card";
+import {AppContext} from "../App";
 
-const Home = ({ items, searchValue, onAddToCart,
-                  onAddToFavorite, cartItems, onChangeSearchInput,
-                  setSearchValue, isLoading }) => {
+const Home = ({ onAddToCart, onAddToFavorite, cartItems, isLoading }) => {
+
+    const { items, searchValue, setSearchValue } = useContext(AppContext);
+
     const renderItems = () => {
         const filteredItems = items
             .filter((item) => item.name.toLowerCase().includes(searchValue));
-      return (isLoading ? [...Array(8)] : filteredItems)
-          .map((item, i) =>
-              <Card
-                  {...item} key={i} loading={isLoading}
-                  onPlus={(obj) => onAddToCart(obj)}
-                  onFavorite={(obj) => onAddToFavorite(obj)}
-                  added={cartItems.some(obj => Number(obj.id) === Number(item.id))}
-              />)
+        return (isLoading ? [...Array(8)] : filteredItems)
+            .map((item, i) =>
+                <Card
+                    {...item}
+                    key={i} loading={isLoading}
+                    onPlus={(obj) => onAddToCart(obj)}
+                    onFavorite={(obj) => onAddToFavorite(obj)}
+                    added={cartItems.some(obj => Number(obj.id) === Number(item.id))}
+                />)
     }
     return (
         <>
@@ -25,7 +28,7 @@ const Home = ({ items, searchValue, onAddToCart,
                         <img src="/img/search.svg" alt="search"/>
                         {searchValue && <img onClick={() => setSearchValue('')}
                                              className="clear" src="/img/btn-remove.svg" alt="clear"/>}
-                        <input onChange={onChangeSearchInput}  value={searchValue} placeholder="Поиск..."/>
+                        <input onChange={(event => setSearchValue(event.target.value))} value={searchValue} placeholder="Поиск..."/>
                     </div>
                 </div>
                 <div className="d-flex flex-wrap">
